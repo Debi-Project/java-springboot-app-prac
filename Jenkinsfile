@@ -69,6 +69,26 @@ pipeline {
                 }
             }
         }
+        stage(" Create Docker Image ") {
+            steps {
+                script {
+                    echo '-------------- Docker Build Started -------------'
+                    app = docker.build("debiproject.jfrog.io/docker-2-docker-local/myapp:1.0")
+                    echo '-------------- Docker Build Ended -------------'
+                }
+            }
+        }
+        stage (" Docker Publish "){
+            steps {
+                script {
+                        echo '---------- Docker Publish Started --------'
+                        docker.withRegistry("https://debiproject.jfrog.io", 'jrog-creden'){
+                        app.push()
+                        echo '------------ Docker Publish Ended ---------'
+                    }
+                }
+            }
+        }
 
     }
 }
